@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #07080c;
+  --ink-2: #0b0d13;
+  --paper: #e9e5dd;
+  --ember: #ff8a5b;
+  --mint: #6ee7d7;
+  --ash: #8b8e99;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+/* iOS 地址栏收起时 100vh 会多出一截，dvh 跟随可视视口 */
+@supports (height: 100dvh) {
+  body,
+  #root {
+    height: 100dvh;
+  }
+}
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Space Grotesk', 'HarmonyOS Sans SC', 'MiSans', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', system-ui, sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--ember);
+  color: #100c08;
+}
+
+/* 精细指针设备隐藏系统光标，改用自绘光标。
+   只有 Cursor 组件真正挂载后才会加上 .cursor-ready，脚本失效时光标仍在 */
+@media (pointer: fine) {
+  html.cursor-ready,
+  html.cursor-ready body,
+  html.cursor-ready body * {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- 颗粒层 ---------- */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+  opacity: 0.032;
+  pointer-events: none;
+  animation: grain-shift 6s steps(6) infinite;
+  mix-blend-mode: overlay;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2%, 1%); }
+  40% { transform: translate(1%, -2%); }
+  60% { transform: translate(-1%, -1%); }
+  80% { transform: translate(2%, 1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ---------- 启动序列 ---------- */
+@keyframes boot-sweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(420%); }
+}
+
+/* 进度条用 transform 驱动，主线程被 three 的解析卡住时它也能自己走 */
+.boot-bar {
+  transform: scaleX(var(--boot, 0));
+  transform-origin: left center;
+  transition: transform 1.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.boot-bar-done {
+  transition-duration: 0.24s;
+}
+
+@keyframes boot-line {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.boot-sweep {
+  animation: boot-sweep 1.5s var(--ease) infinite;
+}
+
+/* ---------- 细滚动条 ---------- */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(233, 229, 221, 0.18) transparent;
+}
+
+.thin-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(233, 229, 221, 0.18);
+  border-radius: 999px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(233, 229, 221, 0.34);
+}
+
+/* ---------- 通用入场 ---------- */
+.reveal {
+  animation: reveal-up 0.9s var(--ease) both;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hairline {
+  background: linear-gradient(90deg, rgba(233, 229, 221, 0.22), rgba(233, 229, 221, 0.02));
+  height: 1px;
+}
