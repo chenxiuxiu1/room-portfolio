@@ -77,8 +77,8 @@ export default function App() {
               )
             }}
             onPointerMissed={() => {
-              // 拖拽环视结束时不要误关面板
-              if (pointerState.moved > 9) return
+              // 拖拽环视结束时不要误关面板；阈值要和 Rig 里开始转视角的门槛对得上
+              if (pointerState.moved > 5) return
               const s = useRoom.getState()
               if (s.book) s.setBook(null)
               s.setActive(null)

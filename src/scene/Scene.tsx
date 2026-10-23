@@ -247,11 +247,13 @@ export default function Scene() {
 
       {quality > 0 && (
         <EffectComposer multisampling={0}>
-          <SMAA preset={SMAAPreset.HIGH} />
+          <SMAA preset={quality > 1 ? SMAAPreset.HIGH : SMAAPreset.MEDIUM} />
           <Bloom
-            intensity={quality > 1 ? 0.46 : 0.3}
+            intensity={quality > 1 ? 0.46 : 0.32}
             luminanceThreshold={0.7}
             luminanceSmoothing={0.22}
+            // 辉光本身是低频信息，半分辨率渲染肉眼看不出差别，成本却只有四分之一
+            resolutionScale={0.5}
           />
           <Vignette offset={0.2} darkness={space ? 0.5 : 0.72} eskil={false} />
         </EffectComposer>

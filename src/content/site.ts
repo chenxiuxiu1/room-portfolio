@@ -34,7 +34,7 @@ export const stations: StationDef[] = [
     cn: '关于',
     hint: '靠墙的书架',
     anchor: [-3.95, 2.95, -2.7],
-    pose: { position: [0.1, 3.0, 1.1], target: [-4.2, 1.6, -2.7], fov: 34 },
+    pose: { position: [-0.55, 2.85, 0.55], target: [-4.2, 1.55, -2.7], fov: 34 },
   },
   {
     id: 'skills',

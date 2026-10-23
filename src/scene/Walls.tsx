@@ -119,6 +119,39 @@ function Window() {
   )
 }
 
+/** 窗帘：布帘垂到地，窗户才像真的在用，而不是墙上开了个洞 */
+function Curtains() {
+  const folds = [-0.17, -0.085, 0, 0.085, 0.17]
+  return (
+    <group>
+      {/* 杆：比窗宽出一截，窗帘才能完全拉到窗两边而不压到窗台 */}
+      <mesh position={[-1.05, 3.02, -4.82]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.017, 0.017, 4.6, 10]} />
+        <meshStandardMaterial color={C.metalDark} roughness={0.34} metalness={0.7} />
+      </mesh>
+      {[-1.05 - 2.05, -1.05 + 2.05].map((x, side) => (
+        <group key={side} position={[x, 1.55, -4.83]}>
+          {/* 几条不同深度的竖裥拼成一片布，侧面看是波浪而不是平板 */}
+          {folds.map((dx, i) => (
+            <RoundedBox
+              key={i}
+              args={[0.082, 2.9, 0.05 + Math.abs(dx) * 0.55]}
+              radius={0.015}
+              smoothness={2}
+              position={[dx, 0, Math.abs(dx) * 0.22]}
+            >
+              <meshStandardMaterial
+                color={i % 2 ? '#493e35' : '#3d332c'}
+                roughness={1}
+              />
+            </RoundedBox>
+          ))}
+        </group>
+      ))}
+    </group>
+  )
+}
+
 /** 后墙右侧的软木板，钉着几张便签 */
 function Pinboard() {
   const notes = useMemo(
@@ -225,6 +258,7 @@ export default function Walls() {
       </mesh>
 
       <Window />
+      <Curtains />
       <Pinboard />
     </group>
   )

@@ -71,14 +71,129 @@ body {
   }
 }
 
+/* ---------- 十字准星光标 ---------- */
+.crosshair {
+  --arm: 6px;
+  --gap: 7px;
+  --line: rgba(233, 229, 221, 0.62);
+  transition: opacity 200ms linear;
+}
+
+.crosshair[data-hot='1'] {
+  --arm: 11px;
+  --gap: 17px;
+}
+
+.crosshair-inner {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform: scale(var(--press, 1));
+  transition: transform 160ms var(--ease);
+  /* 浅色书脊、白纸上准星不能消失，给一点点描边 */
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.55));
+}
+
+.crosshair-dot {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
+  background: var(--line);
+  transform: rotate(45deg);
+  transition: background-color 260ms var(--ease), width 260ms var(--ease), height 260ms var(--ease),
+    left 260ms var(--ease), top 260ms var(--ease);
+}
+
+.crosshair[data-hot='1'] .crosshair-dot {
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--ember);
+}
+
+.crosshair-arm {
+  position: absolute;
+  background: var(--line);
+  transition: all 320ms var(--ease);
+}
+
+.crosshair[data-hot='1'] .crosshair-arm {
+  background: var(--ember);
+}
+
+.crosshair-arm-t {
+  left: -0.5px;
+  bottom: var(--gap);
+  width: 1px;
+  height: var(--arm);
+}
+
+.crosshair-arm-b {
+  left: -0.5px;
+  top: var(--gap);
+  width: 1px;
+  height: var(--arm);
+}
+
+.crosshair-arm-l {
+  top: -0.5px;
+  right: var(--gap);
+  height: 1px;
+  width: var(--arm);
+}
+
+.crosshair-arm-r {
+  top: -0.5px;
+  left: var(--gap);
+  height: 1px;
+  width: var(--arm);
+}
+
+.crosshair-label {
+  position: absolute;
+  left: 28px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  opacity: 0;
+  transform: translateX(-7px);
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+}
+
+.crosshair-label[data-show='1'] {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.crosshair-label-rule {
+  width: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 138, 91, 0.7), rgba(255, 138, 91, 0.1));
+}
+
+.crosshair-label-text {
+  font-family: 'Space Grotesk', 'Microsoft YaHei', system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ember);
+  white-space: nowrap;
+}
+
 /* ---------- 颗粒层 ---------- */
+/* 只用视口多出 6% 的余量（原来 inset:-50% 是 4 倍面积）。
+   overlay 混合是按面积付费的，看不见的区域每帧也在合成，拖拽时会直接反映成掉帧 */
 .grain::after {
   content: '';
   position: absolute;
-  inset: -50%;
+  inset: -3%;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
   opacity: 0.032;
   pointer-events: none;
+  will-change: transform;
   animation: grain-shift 6s steps(6) infinite;
   mix-blend-mode: overlay;
 }
