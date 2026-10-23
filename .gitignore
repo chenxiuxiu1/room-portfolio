@@ -15,4 +15,5 @@ qa-artifacts/
 .playwright-cli/
 
 qa/
+.workbuddy/
 

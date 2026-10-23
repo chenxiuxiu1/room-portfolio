@@ -20,17 +20,18 @@
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2307080c'/><circle cx='16' cy='16' r='5.5' fill='%23ff8a5b'/></svg>"
     />
 
-    <!-- 字体本地化：不依赖任何第三方域，首屏不再等待外链样式表 -->
+    <!-- 字体本地化：不依赖任何第三方域，首屏不再等待外链样式表。
+         %BASE_URL% 由 Vite 填充，子路径部署到 GitHub Pages 时才不会读不到字体 -->
     <link
       rel="preload"
-      href="/fonts/space-grotesk-var.woff2"
+      href="%BASE_URL%fonts/space-grotesk-var.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/fonts/jetbrains-mono-var.woff2"
+      href="%BASE_URL%fonts/jetbrains-mono-var.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -41,14 +42,14 @@
         font-style: normal;
         font-weight: 300 700;
         font-display: swap;
-        src: url('/fonts/space-grotesk-var.woff2') format('woff2-variations');
+        src: url('%BASE_URL%fonts/space-grotesk-var.woff2') format('woff2-variations');
       }
       @font-face {
         font-family: 'JetBrains Mono';
         font-style: normal;
         font-weight: 100 800;
         font-display: swap;
-        src: url('/fonts/jetbrains-mono-var.woff2') format('woff2-variations');
+        src: url('%BASE_URL%fonts/jetbrains-mono-var.woff2') format('woff2-variations');
       }
       /* 中文一律使用系统字体，不下载任何中文字体文件 */
       html {
