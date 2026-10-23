@@ -10,6 +10,8 @@ export default function Hud() {
   const setTheme = useRoom((s) => s.setTheme)
   const space = useRoom((s) => s.space)
   const setSpace = useRoom((s) => s.setSpace)
+  const quality = useRoom((s) => s.quality)
+  const setQuality = useRoom((s) => s.setQuality)
   const [time, setTime] = useState('--:--')
 
   useEffect(() => {
@@ -65,6 +67,20 @@ export default function Hud() {
               {theme === 'night' ? '夜色' : '黄昏'}
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => setQuality(((quality + 1) % 3) as 0 | 1 | 2)}
+            aria-label="切换渲染画质"
+            className="pointer-events-auto mt-1 inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.12em] text-paper/45 transition-colors hover:text-ember focus:outline-none focus-visible:ring-1 focus-visible:ring-ember/60"
+          >
+            <span
+              className={
+                'h-[6px] w-[6px] rounded-sm transition-colors duration-500 ' +
+                (quality === 2 ? 'bg-ember' : quality === 1 ? 'bg-paper/55' : 'bg-paper/25')
+              }
+            />
+            {quality === 2 ? '画质 高' : quality === 1 ? '画质 中' : '画质 低'}
+          </button>
         </div>
       </header>
 

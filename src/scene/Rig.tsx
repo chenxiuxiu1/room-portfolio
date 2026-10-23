@@ -219,18 +219,18 @@ export default function Rig() {
       }
     }
 
-    // 帧率不足时自动降级（两轮就降，别让用户先卡两秒）
+    // 帧率不足时自动降级：只从「高」降到「标准」，不把用户自己选的档再往下拽
     if (!state.booted || state.quality === 0) return
     const m = perf.current
     m.frames += 1
     m.span += dt
-    if (m.span >= 0.8) {
+    if (m.span >= 1.2) {
       const fps = m.frames / m.span
       m.frames = 0
       m.span = 0
-      m.low = fps < 48 ? m.low + 1 : 0
-      if (m.low >= 2 && state.quality > 0) {
-        setQuality((state.quality - 1) as 0 | 1 | 2)
+      m.low = fps < 36 ? m.low + 1 : 0
+      if (m.low >= 2 && state.quality === 2) {
+        setQuality(1)
         m.low = 0
       }
     }
