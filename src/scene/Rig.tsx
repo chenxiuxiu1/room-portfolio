@@ -124,18 +124,18 @@ export default function Rig() {
       const dy = e.clientY - pointerState.y
       if (pointerState.down) {
         pointerState.moved += Math.hypot(dx, dy)
-        if (pointerState.moved > 4) {
-          // 手感：横向拖两百来像素走完总览的全部可转范围，纵向稍慢一点；
+        if (pointerState.moved > 2) {
+          // 手感：横向拖约 140px 走完总览的全部可转范围，纵向稍慢一点；
           // 障碍只剩边界，不再有插值延迟（见 useFrame 里的 follow 分支）
-          const k = e.pointerType === 'touch' ? 0.7 : 1
+          const k = e.pointerType === 'touch' ? 0.85 : 1
           const l = lim.current
           orbit.current.yaw = THREE.MathUtils.clamp(
-            orbit.current.yaw - dx * 0.0054 * k,
+            orbit.current.yaw - dx * 0.008 * k,
             -l.yaw,
             l.yaw,
           )
           orbit.current.pitch = THREE.MathUtils.clamp(
-            orbit.current.pitch + dy * 0.0034 * k,
+            orbit.current.pitch + dy * 0.005 * k,
             -l.pitch,
             l.pitch,
           )
@@ -242,23 +242,23 @@ export default function Rig() {
         basePos = PORTAL_IN.position
         baseTarget = PORTAL_IN.target
         baseFov = PORTAL_IN.fov
-        lambda = 6
+        lambda = 8
       } else {
         basePos = PORTAL_OUT.position
         baseTarget = PORTAL_OUT.target
         baseFov = PORTAL_OUT.fov
-        lambda = 2.6
+        lambda = 4
       }
     } else if (station) {
       basePos = tmp.baseP.set(...station.pose.position)
       baseTarget = tmp.baseT.set(...station.pose.target)
       baseFov = station.pose.fov ?? 36
-      lambda = 4.6
+      lambda = 6.2
     } else {
       basePos = tmp.baseP.copy(mobile ? OVERVIEW_MOBILE.position : OVERVIEW.position)
       baseTarget = tmp.baseT.copy(mobile ? OVERVIEW_MOBILE.target : OVERVIEW.target)
       baseFov = mobile ? OVERVIEW_MOBILE.fov : OVERVIEW.fov
-      lambda = 4.4
+      lambda = 5.8
     }
 
     // 用户在转视角（或惯性未停）时相机必须紧跟；换机位时保持上面的慢速运镜
@@ -273,8 +273,8 @@ export default function Rig() {
       // 鼠标视差只留在总览；拖拽期间完全冻结（而不是回中），
       // 否则按下鼠标那一瞬画面会自己平移一下，看着像没抓住
       if (!station && !space && !pointerState.down) {
-        parallax.current.x = damp(parallax.current.x, pointerState.nx, 3.6, dt)
-        parallax.current.y = damp(parallax.current.y, pointerState.ny, 3.6, dt)
+        parallax.current.x = damp(parallax.current.x, pointerState.nx, 5.0, dt)
+        parallax.current.y = damp(parallax.current.y, pointerState.ny, 5.0, dt)
       }
       if (!station && !space) {
         // 沿「屏幕右」平移，而不是世界 X 轴：等轴测下世界 X 在屏幕上是斜的，
